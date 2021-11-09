@@ -19,8 +19,10 @@ plt.scatter(X[y == 4, 0], X[y == 4, 1])
 plt.show()
 
 print(y)
-y_cat = to_categorical(y, 5)
+# Hot encoding.
+y_cat = to_categorical(y)
 print(y_cat)
+print(X.shape)
 model = Sequential()
 model.add(Dense(5, input_shape=(2,), activation='softmax'))
 model.compile(Adam(lr=0.1), 'categorical_crossentropy', metrics=['accuracy'])
@@ -33,7 +35,7 @@ def plot_multiclass_decision_boundary(X, y, model):
     y_span = np.linspace(min(X[:, 1]) - 1, max(X[:, 1]) + 1)
     xx, yy = np.meshgrid(x_span, y_span)
     grid = np.c_[xx.ravel(), yy.ravel()]
-    pred_func = model.predict_classes(grid)
+    pred_func = model.predict_classes(grid) # Because it is a multi class classification.
     z = pred_func.reshape(xx.shape)
     plt.contourf(xx, yy, z)
 
@@ -57,6 +59,6 @@ y = -0.5
 
 point = np.array([[x, y]])
 prediction = model.predict_classes(point)
-plt.plot([x], [y], marker='o', markersize=10, color="yellow")
+plt.plot([x], [y], marker='o', markersize=10, color="black")
 print("Prediction is: ", prediction)
 plt.show()
