@@ -7,6 +7,9 @@ from keras.layers import Dense
 from keras.optimizers import Adam
 from keras.utils.np_utils import to_categorical
 import random
+import cv2
+import requests
+from PIL import Image
 
 np.random.seed(0)
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
@@ -85,3 +88,23 @@ score = model.evaluate(X_test, y_test, verbose=0)
 print(type(score))
 print('Test score:', score[0])
 print('Test accuracy:', score[1])
+
+
+url = 'https://colah.github.io/posts/2014-10-Visualizing-MNIST/img/mnist_pca/MNIST-p1815-4.png'
+response = requests.get(url, stream=True)
+img = Image.open(response.raw)
+plt.imshow(img, cmap=plt.get_cmap('gray'))
+plt.show()
+
+img = np.asarray(img)
+img = cv2.resize(img, (28, 28))
+img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+img = cv2.bitwise_not(img)
+plt.imshow(img, cmap=plt.get_cmap('gray'))
+plt.show()
+
+img = img / 255
+img = img.reshape(1, 784)
+
+prediction = model.predict_classes(img)
+print("predicted digit:", str(prediction))
